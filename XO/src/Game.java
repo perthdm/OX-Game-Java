@@ -7,35 +7,59 @@ public class Game {
     private static int row;
 
 
-    public static void main(String args[] ){
+    public static void main(String[] args) {
         ox = new OX();
-
-        while (true){
-            System.out.print(ox.getTableString());
+        while(true) {
+            printTable();
             input();
-
-            if(ox.put(col,row) == true ){
-                ox.switchPlayer();
+            if(ox.checkWin(col,row)) {
+                printTable();
+                printWin();
+                printScore();
+                ox.reset();
+                continue;
             }
-
-            if(ox.checkWin(col,row)){
-                break;
+            if(ox.isDraw()) {
+                printTable();
+                printDraw();
+                printScore();
+                ox.reset();
+                continue;
             }
-
-
+            ox.switchPlayer();
         }
-
-
     }
 
-    public static void input(){
-        System.out.print(ox.getCurrentPlayer()+ " (Col): ");
-        col = kb.nextInt();
-        System.out.print(ox.getCurrentPlayer()+ " (Row): ");
-        row = kb.nextInt();
+    private static void printWin() {
+        System.out.println(ox.getCurrentPlayer() + " " + "Win");
+    }
+    private static void printDraw() {
+        System.out.println("Draw");
+    }
+    private static void printScore() {
+        System.out.println("X win: " + ox.getScoreX());
+        System.out.println("O win: " + ox.getScoreO());
+        System.out.println("Draw: " + ox.getScoreDraw());
     }
 
+    private static void input() {
+        boolean canPut = true;
+        do {
+            System.out.print(ox.getCurrentPlayer() + " Col :");
+            col = kb.nextInt();
+            System.out.print(ox.getCurrentPlayer() + " Row :");
+            row = kb.nextInt();
+            canPut = ox.put(col, row);
 
+            if (!canPut) {
+                System.out.println("Please input number 0-2 and put in empty slot");
+            }
+        } while(!canPut);
+    }
+
+    private static void printTable() {
+        System.out.print(ox.getTableString());
+    }
 
 
 
